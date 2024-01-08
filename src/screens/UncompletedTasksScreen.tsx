@@ -1,36 +1,28 @@
-// UncompletedTasksScreen.tsx
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-
-interface Task {
-  id: string;
-  name: string;
-  description: string;
-  date: Date;
-  completed: boolean;
-  category: 'event' | 'task' | 'goal';
-}
-
-const tasksData: Task[] = [
-  // Здесь можно добавить начальные задачи
-];
+import React, { useContext, useEffect, useState } from "react";
+import { View, FlatList, TouchableOpacity } from "react-native";
+import ToDoItem from "../components/ToDoItem";
+import { ToDoItemType } from "../types/ToDoItemType";
+import { useDatabase } from "../contexts/DatabaseContext";
 
 const UncompletedTasksScreen: React.FC = () => {
-  const renderTaskItem = ({ item }: { item: Task }) => (
-    <TouchableOpacity>
-      <View>
-        <Text>{item.name}</Text>
-        <Text>{item.date.toLocaleString()}</Text>
-      </View>
-    </TouchableOpacity>
+  const { tasks } = useDatabase();
+  const [uncompletedTasks, setUncompletedTasks] = useState<ToDoItemType[]>([]);
+
+  useEffect(() => {
+    const uncompleted = tasks.filter((task) => !task.isFinished);
+    setUncompletedTasks(uncompleted);
+  }, [tasks]);
+
+  const renderTaskItem = ({ item }: { item: ToDoItemType }) => (
+    <ToDoItem value={item}></ToDoItem>
   );
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
-        data={tasksData.filter(task => !task.completed)}
+        data={uncompletedTasks}
         renderItem={renderTaskItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.title}
       />
     </View>
   );

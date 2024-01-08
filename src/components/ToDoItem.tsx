@@ -17,17 +17,18 @@ import CheckBoxTrue from "../icons/CheckBoxTrue";
 import { ToDoItemType } from "../types/ToDoItemType";
 
 interface ToDoItem {
-  todo: ToDoItemType;
+  value: ToDoItemType;
   inputStyles?: StyleProp<ViewStyle>;
 }
 
-const ToDoItem: React.FC<ToDoItem> = ({ todo }) => {
-  const [isFinished, setIsFinished] = useState(todo.isFinished || false);
+const ToDoItem: React.FC<ToDoItem> = ({ value }) => {
+  const [isFinished, setIsFinished] = useState(value.isFinished || false);
 
-  const { title, category, time } = todo;
+  const { title, category, time } = value;
 
   const onPress = () => {
     setIsFinished(!isFinished);
+    value.isFinished = !value.isFinished;
   };
 
   const renderIcon = (categoryName: string) => {

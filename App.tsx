@@ -1,19 +1,20 @@
-// App.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import CreateTaskScreen from "./src/screens/CreateTaskScreen";
-import UncompletedTasksScreen from "./src/screens/UncompletedTasksScreen";
-import CompletedTasksScreen from "./src/screens/CompletedTasksScreen";
 import Navigation from "./src/navigations/Navigation";
+import { initDatabase } from "./src/databases/ToDoDB";
+import { DatabaseProvider } from "./src/contexts/DatabaseContext";
 
 const Tab = createBottomTabNavigator();
 
 const App: React.FC = () => {
+  useEffect(() => {
+    initDatabase();
+  }, []);
   return (
-    <NavigationContainer>
+    <DatabaseProvider>
       <Navigation />
-    </NavigationContainer>
+    </DatabaseProvider>
   );
 };
 
